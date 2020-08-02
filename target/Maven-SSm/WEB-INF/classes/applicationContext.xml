@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+
+    <!--    开启注解扫描-->
+    <context:component-scan base-package="com"/>
+
+
+    <!--Spring整合MyBatis框架-->
+    <!--配置连接池-->
+    <bean id="datasource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/testuser?serverTimezone=UTC"/>
+        <property name="username" value="root"/>
+        <property name="password" value="yi123"/>
+    </bean>
+
+    <!--    数据库工厂-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--        加载mybatis核心配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--        引用数据源-->
+        <property name="dataSource" ref="datasource"/>
+        <!--        记载 meapper 映射文件-->
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/mapper/*.xml</value>
+            </list>
+        </property>
+    </bean>
+
+
+
+    <!--    如果有多个dao就得配置多个；但可以使用扫描器-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.dao"/>
+    </bean>
+
+
+</beans>
